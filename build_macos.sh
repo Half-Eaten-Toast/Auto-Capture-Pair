@@ -1,0 +1,1 @@
+pnpm run tauri build --target universal-apple-darwin
