@@ -164,7 +164,7 @@ export default function HomePage() {
 							Install the Auto Capture app on your iOS device from the App
 							Store.
 						</li>
-						{
+						{/*
 							// if on windows show additional step for installing iTunes
 							navigator.userAgent.indexOf("Windows") !== -1 ? (
 								<li>
@@ -181,7 +181,7 @@ export default function HomePage() {
 									</Link>
 								</li>
 							) : null
-						}
+							*/}
 						{/*
 						<li>
 							Scan the following QR code to add the "Capture Device" shortcut to
@@ -224,6 +224,18 @@ export default function HomePage() {
 							.
 						</li>
 					</ol>
+				</Typography>
+
+				<Typography
+					variant="body2"
+					sx={{
+						marginBottom: theme.spacing(2),
+						marginX: theme.spacing(3),
+					}}
+				>
+					<strong>Note:</strong> If your device does not appear in the dropdown,
+					try disconnecting and reconnecting it, ensuring it is unlocked and on
+					the home screen.
 				</Typography>
 
 				<Grid

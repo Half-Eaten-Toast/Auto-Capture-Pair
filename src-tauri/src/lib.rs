@@ -1,5 +1,3 @@
-use idevice::pairing_file;
-
 mod idevice_helpers;
 mod pairing;
 
@@ -125,6 +123,17 @@ async fn reveal_dev_mode(udid: String) -> Result<(), String> {
     Ok(())
 }
 
+// Command wrappers for frontend invocation
+#[tauri::command]
+fn check_apple_drivers() -> Result<String, String> {
+    idevice_helpers::check_apple_drivers()
+}
+
+#[tauri::command]
+fn install_apple_drivers() -> Result<String, String> {
+    idevice_helpers::install_apple_drivers()
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     // Initialize logging (no-op if already initialized).
@@ -138,7 +147,9 @@ pub fn run() {
             get_app_data_folder,
             setup_device,
             get_device_in_dev_mode,
-            reveal_dev_mode
+            reveal_dev_mode,
+            check_apple_drivers,
+            install_apple_drivers
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

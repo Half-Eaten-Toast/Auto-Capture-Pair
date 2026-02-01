@@ -8,7 +8,7 @@ import AboutPage from "./pages/AboutPage";
 //import SettingsPage from "./pages/SettingsPage";
 
 //React
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 //Material UI Components
 import {
@@ -26,6 +26,11 @@ import {
 	Button,
 	MenuItem,
 	SvgIcon,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogActions,
+	CircularProgress,
 } from "@mui/material";
 
 //Material UI Icons
@@ -63,6 +68,8 @@ function App() {
 	// Set drawer width to be the size of the icons
 	const drawerWidth = theme.spacing(7) + 1;
 
+	let invoke = window.__TAURI__.core.invoke;
+
 	const classes = {
 		root: {
 			display: "flex",
@@ -79,11 +86,87 @@ function App() {
 		},
 	};
 
+	const [driverStatus, setDriverStatus] = useState(null);
+	const [installing, setInstalling] = useState(false);
+	const [installError, setInstallError] = useState(null);
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const res = await invoke("check_apple_drivers");
+				setDriverStatus(res);
+			} catch (e) {
+				console.error("driver check failed", e);
+			}
+		})();
+	}, []);
+
+	const onInstall = async () => {
+		setInstalling(true);
+		setInstallError(null);
+		try {
+			await invoke("install_apple_drivers");
+			setDriverStatus("Installed");
+			setInstalling(false);
+			return;
+		} catch (e) {
+			console.error(e);
+			setInstallError("Failed to start installer: " + String(e));
+			setInstalling(false);
+			return;
+		}
+	};
+
 	return (
 		<div style={classes.root}>
+			{/* Driver required modal */}
 			<StyledEngineProvider injectFirst>
 				<ThemeProvider theme={theme}>
 					<CssBaseline />
+					<Dialog
+						open={driverStatus === "Missing"}
+						onClose={() => {
+							if (!installing) setDriverStatus(null);
+						}}
+					>
+						<DialogTitle>Apple drivers required on Windows</DialogTitle>
+						<DialogContent>
+							{installError ? (
+								<Typography color="error">{installError}</Typography>
+							) : installing ? (
+								<>
+									Installing apple drivers... <br />
+									When prompted allow the installer to run. This may take
+									several minutes.
+									<CircularProgress size={16} sx={{ ml: 1 }} />
+								</>
+							) : (
+								"This app needs Apple USB and Mobile Device drivers installed to function correctly. Click Install to run the installer with administrative privileges."
+							)}
+						</DialogContent>
+						<DialogActions>
+							<Button
+								onClick={() => setDriverStatus(null)}
+								disabled={installing}
+							>
+								Dismiss
+							</Button>
+							<Button
+								onClick={onInstall}
+								disabled={installing}
+								variant="contained"
+							>
+								{installing ? (
+									<>
+										<CircularProgress size={16} sx={{ mr: 1 }} />
+										Installing...
+									</>
+								) : (
+									"Install drivers"
+								)}
+							</Button>
+						</DialogActions>
+					</Dialog>
 					<HashRouter>
 						<AppBar position="fixed" enableColorOnDark elevation={16}>
 							<Toolbar variant="dense">
