@@ -90,7 +90,7 @@ pub async fn is_device_in_dev_mode(udid: &str) -> Result<bool, IdeviceError> {
 
 // Reveal dev mode
 pub async fn reveal_dev_mode(udid: &str) -> Result<(), IdeviceError> {
-    log::info!("is_device_in_dev_mode: starting for udid={}", udid);
+    log::info!("reveal_dev_mode: starting for udid={}", udid);
 
     // Connect to usbmuxd
     log::debug!("is_device_in_dev_mode: connecting to usbmuxd");
@@ -132,10 +132,7 @@ pub fn check_apple_drivers() -> Result<String, String> {
         .map_err(|e| format!("failed to run pnputil: {}", e))?;
     let stdout = String::from_utf8_lossy(&output.stdout).to_lowercase();
 
-    if !stdout.contains("netaapl64")
-        || stdout.contains("apple mobile")
-        || stdout.contains("apple usb")
-    {
+    if (stdout.contains("netaapl64") || stdout.contains("usbaapl64")) {
         Ok("Installed".into())
     } else {
         Ok("Missing".into())

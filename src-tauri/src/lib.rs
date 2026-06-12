@@ -28,9 +28,7 @@ async fn generate_pairing_file(
         .await
         .map_err(|e| format!("idevice error: {:?}", e))?;
 
-    let pairing_file_plist: Vec<u8> = pairing_file
-        .serialize()
-        .map_err(|e| format!("failed to serialize pairing file: {}", e))?;
+    let pairing_file_plist: Vec<u8> = pairing_file.to_bytes();
 
     if let Some(dest) = destination {
         std::fs::write(&dest, &pairing_file_plist)
