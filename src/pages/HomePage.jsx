@@ -136,7 +136,9 @@ export default function HomePage() {
 			<Grid
 				container
 				spacing={0}
-				alignItems="center"
+				sx={{
+					alignItems: "center",
+				}}
 				justifyContent="center"
 				direction="column"
 			>

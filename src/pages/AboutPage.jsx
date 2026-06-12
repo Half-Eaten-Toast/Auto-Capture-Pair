@@ -57,10 +57,10 @@ export default function AboutPage() {
 		<Grid
 			container
 			spacing={0}
-			alignItems="center"
 			justifyContent="center"
 			direction="column"
 			sx={{
+				alignItems: "center",
 				padding: theme.spacing(2),
 				paddingTop: theme.spacing(4),
 			}}
