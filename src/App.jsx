@@ -231,7 +231,7 @@ function App() {
 							}}
 						>
 							<Typography variant="body2">
-								&copy; 2025 Half Eaten Toast LLC. Support:
+								&copy; 2025-2026 Half Eaten Toast LLC. Support:
 								support@halfeatentoast.com
 							</Typography>
 						</Box>
